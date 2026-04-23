@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nodo Terapéutico Móvil | IA & Salud Territorial</title>
+
+    <!-- Google Fonts: Quicksand para un look amigable, moderno y apto para temática infantil/salud -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Phosphor Icons para iconografía moderna -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind CSS (CDN para este prototipo en un archivo) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Configuración de Tailwind con tu Paleta de Colores -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        olive: '#808d8e',
+                        dusty: '#766c7f',
+                        amethyst: '#947eb0',
+                        lavender: '#a3a5c3',
+                        lightblue: '#a9d2d5',
+                        dark: '#2d3748',
+                        light: '#f7fafc'
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* ==========================================
+           GLASSMORPHISM & AESTHETIC 2026 STYLES
+           ========================================== */
+
+        body {
+            background-color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Mesh Gradient Background animado usando los colores de la paleta */
+        .mesh-bg {
+            background-color: #a9d2d5;
+            background-image:
+                radial-gradient(at 10% 10%, rgba(148, 126, 176, 0.4) 0px, transparent 50%),
+                radial-gradient(at 90% 10%, rgba(163, 165, 195, 0.4) 0px, transparent 50%),
+                radial-gradient(at 90% 90%, rgba(128, 141, 142, 0.3) 0px, transparent 50%),
+                radial-gradient(at 10% 90%, rgba(118, 108, 127, 0.3) 0px, transparent 50%);
+            background-size: 200% 200%;
+            animation: gradientMove 15s ease infinite;
+        }
+
+        @keyframes gradientMove {
+            0% {
+                background-position: 0% 0%;
+            }
+
+            50% {
+                background-position: 100% 100%;
+            }
+
+            100% {
+                background-position: 0% 0%;
+            }
+        }
+
+        /* Clases base para Glassmorphism */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 40px -10px rgba(118, 108, 127, 0.2);
+            /* Dusty Lavender shadow */
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(148, 126, 176, 0.15);
+            /* Amethyst shadow */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px 0 rgba(148, 126, 176, 0.3);
+            background: rgba(255, 255, 255, 0.75);
+        }
+
+        .glass-dark {
+            background: rgba(118, 108, 127, 0.7);
+            /* Dusty Lavender base */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(163, 165, 195, 0.3);
+            /* Lavender Grey border */
+        }
+
+        /* Componentes lúdicos (Blobs) */
+        .shape-blob {
+            position: absolute;
+            filter: blur(40px);
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        /* Botón primario estético */
+        .btn-glass {
+            background: linear-gradient(135deg, #947eb0, #766c7f);
+            color: white;
+            box-shadow: 0 4px 15px rgba(148, 126, 176, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-glass::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: all 0.4s ease;
+        }
+
+        .btn-glass:hover::before {
+            left: 100%;
+        }
+
+        .btn-glass:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(148, 126, 176, 0.6);
+        }
+
+        /* Texto degradado usando colores de la paleta */
+        .text-gradient {
+            background: linear-gradient(135deg, #766c7f, #947eb0, #808d8e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #a3a5c3;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #947eb0;
+        }
+    </style>
+</head>
+
+<body class="text-dark antialiased mesh-bg min-h-screen relative">
+
+    <!-- Blobs decorativos de fondo -->
+    <div class="shape-blob bg-amethyst w-96 h-96 rounded-full top-0 left-0 animate-blob"></div>
+    <div class="shape-blob bg-lightblue w-96 h-96 rounded-full top-40 right-20 animate-blob"
+        style="animation-delay: 2s"></div>
+    <div class="shape-blob bg-lavender w-80 h-80 rounded-full bottom-0 left-40 animate-blob"
+        style="animation-delay: 4s"></div>
+
+    <!-- HEADER / NAV -->
+    <nav class="fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="glass-panel rounded-full px-6 py-3 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <div
+                        class="w-10 h-10 rounded-full bg-gradient-to-tr from-amethyst to-lightblue flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                        <i class="ph ph-planet"></i>
+                    </div>
+                    <span class="font-bold text-xl text-dusty tracking-tight">Nodo<span
+                            class="text-amethyst">Móvil</span></span>
+                </div>
+
+                <div class="hidden md:flex space-x-8 items-center font-semibold text-olive">
+                    <a href="#inicio" class="hover:text-amethyst transition-colors">Inicio</a>
+                    <a href="#problema" class="hover:text-amethyst transition-colors">El Desafío</a>
+                    <a href="#solucion" class="hover:text-amethyst transition-colors">Solución Tech</a>
+                    <a href="#equipo" class="hover:text-amethyst transition-colors">Equipo</a>
+                </div>
+
+                <div class="hidden md:block">
+                    <a href="#contacto" class="btn-glass px-6 py-2 rounded-full font-bold text-sm tracking-wide">Únete
+                        al Piloto</a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <button class="md:hidden text-dusty text-2xl focus:outline-none" id="mobile-menu-btn">
+                    <i class="ph ph-list"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section id="inicio" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-6">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+
+            <div class="z-10 text-center lg:text-left">
+                <div
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel text-sm font-bold text-amethyst mb-6">
+                    <i class="ph-fill ph-sparkle"></i> Postulación CORFO Semilla Inicia 2026
+                </div>
+                <h1 class="text-5xl lg:text-6xl font-extrabold mb-6 leading-tight tracking-tight">
+                    Democratizando la <br>
+                    <span class="text-gradient">Salud Territorial</span> con IA
+                </h1>
+                <p class="text-lg text-dusty mb-8 font-medium max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                    Llevamos la complejidad de las salas Snoezelen e Integración Sensorial a zonas aisladas. Optimizado
+                    por mapas de calor y la derivación activa de profesionales en terreno.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <a href="#solucion"
+                        class="btn-glass px-8 py-4 rounded-full font-bold text-lg flex items-center justify-center gap-2">
+                        Descubrir la Tecnología <i class="ph-bold ph-arrow-right"></i>
+                    </a>
+                    <a href="#problema"
+                        class="px-8 py-4 rounded-full font-bold text-lg text-dusty border-2 border-lavender hover:bg-white/50 transition-colors flex items-center justify-center gap-2 glass-panel">
+                        <i class="ph-bold ph-chart-bar"></i> Ver Datos Reales
+                    </a>
+                </div>
+            </div>
+
+            <!-- Hero Image/Graphic (Glassmorphism Mockup) -->
+            <div class="relative z-10 animate-float">
+                <div class="glass-panel p-4 rounded-3xl relative">
+                    <!-- Decoración UI del Mockup -->
+                    <div class="flex gap-2 mb-4 px-2">
+                        <div class="w-3 h-3 rounded-full bg-olive/50"></div>
+                        <div class="w-3 h-3 rounded-full bg-lavender/50"></div>
+                        <div class="w-3 h-3 rounded-full bg-amethyst/50"></div>
+                    </div>
+                    <!-- Placeholder de Mapa de Calor / Dashboard -->
+                    <div
+                        class="bg-white/40 rounded-2xl p-6 relative overflow-hidden border border-white/50 shadow-inner">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="font-bold text-dusty"><i class="ph-fill ph-map-pin"></i> Mapa de Calor Activo
+                            </h3>
+                            <span class="bg-lightblue text-white px-3 py-1 rounded-full text-xs font-bold">Los
+                                Lagos</span>
+                        </div>
+
+                        <!-- Visual representation of map -->
+                        <div
+                            class="h-48 rounded-xl bg-gradient-to-br from-lavender/30 to-lightblue/30 relative overflow-hidden flex items-center justify-center border border-white/40">
+                            <!-- Heat spots -->
+                            <div
+                                class="absolute top-1/4 left-1/4 w-16 h-16 bg-amethyst/60 rounded-full blur-xl animate-pulse">
+                            </div>
+                            <div class="absolute bottom-1/3 right-1/3 w-20 h-20 bg-dusty/50 rounded-full blur-xl animate-pulse"
+                                style="animation-delay: 1s"></div>
+
+                            <div class="text-center">
+                                <i class="ph-fill ph-truck text-4xl text-amethyst mb-2 drop-shadow-md"></i>
+                                <div class="bg-white/80 px-3 py-1 rounded-full text-xs font-bold text-olive shadow-sm">
+                                    Nodo en ruta a Frutillar</div>
+                            </div>
+                        </div>
+
+                        <!-- Stats -->
+                        <div class="grid grid-cols-2 gap-4 mt-4">
+                            <div class="bg-white/50 p-3 rounded-xl border border-white/60">
+                                <div class="text-xs text-olive font-bold">Derivaciones APS</div>
+                                <div class="text-2xl font-black text-amethyst">142</div>
+                            </div>
+                            <div class="bg-white/50 p-3 rounded-xl border border-white/60">
+                                <div class="text-xs text-olive font-bold">Pacientes en Ruta</div>
+                                <div class="text-2xl font-black text-amethyst">28</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- EL PROBLEMA / MÉTRICAS (Data Storytelling) -->
+    <section id="problema" class="py-20 px-6 relative z-10">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl lg:text-4xl font-black text-dusty mb-4">La Brecha de Inclusión Oculta</h2>
+                <p class="text-olive font-medium max-w-2xl mx-auto">Mientras la tecnología avanza, los niños
+                    neurodivergentes en zonas rurales de la Región de Los Lagos están siendo abandonados por el sistema.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Data Card 1 -->
+                <div class="glass-card p-8 rounded-3xl text-center">
+                    <div
+                        class="w-16 h-16 mx-auto bg-lightblue/30 rounded-2xl flex items-center justify-center mb-6 text-3xl text-olive">
+                        <i class="ph-fill ph-users-three"></i>
+                    </div>
+                    <h3 class="text-4xl font-black text-amethyst mb-2">17%</h3>
+                    <p class="font-bold text-dusty mb-2">Población con Discapacidad</p>
+                    <p class="text-sm text-olive">En la Región de Los Lagos, esto equivale a un mercado potencial
+                        crítico de ~155.000 personas.</p>
+                </div>
+
+                <!-- Data Card 2 -->
+                <div class="glass-card p-8 rounded-3xl text-center transform md:-translate-y-4">
+                    <div
+                        class="w-16 h-16 mx-auto bg-amethyst/20 rounded-2xl flex items-center justify-center mb-6 text-3xl text-amethyst border border-amethyst/30">
+                        <i class="ph-fill ph-warning-circle"></i>
+                    </div>
+                    <h3 class="text-4xl font-black text-dusty mb-2">Solo 9</h3>
+                    <p class="font-bold text-amethyst mb-2">Niños Atendidos (2023-24)</p>
+                    <p class="text-sm text-olive">Por programas nacionales SENADIS en la región. Representa apenas el
+                        2,22% del total nacional.</p>
+                </div>
+
+                <!-- Data Card 3 -->
+                <div class="glass-card p-8 rounded-3xl text-center">
+                    <div
+                        class="w-16 h-16 mx-auto bg-lavender/30 rounded-2xl flex items-center justify-center mb-6 text-3xl text-dusty">
+                        <i class="ph-fill ph-mountains"></i>
+                    </div>
+                    <h3 class="text-4xl font-black text-olive mb-2">0%</h3>
+                    <p class="font-bold text-dusty mb-2">Cobertura Rural Compleja</p>
+                    <p class="text-sm text-olive">Las salas Snoezelen e integración sensorial están hipercentralizadas.
+                        La telemedicina no basta.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOLUCIÓN / CÓMO FUNCIONA -->
+    <section id="solucion" class="py-20 px-6 relative z-10">
+        <div class="max-w-7xl mx-auto glass-panel p-8 lg:p-16 rounded-[3rem]">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+
+                <div>
+                    <span class="text-amethyst font-bold tracking-wider uppercase text-sm mb-2 block">Nuestra Propuesta
+                        Híbrida</span>
+                    <h2 class="text-3xl lg:text-4xl font-black text-dusty mb-6">Hardware Circular guiado por Software
+                        Inteligente</h2>
+
+                    <div class="space-y-8 mt-10">
+                        <!-- Feature 1 -->
+                        <div class="flex gap-4">
+                            <div
+                                class="flex-shrink-0 w-12 h-12 rounded-full bg-lightblue/40 flex items-center justify-center text-olive text-xl border border-lightblue/60">
+                                <i class="ph-bold ph-recycle"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg text-dusty mb-1">Container Móvil (Upcycling)</h4>
+                                <p class="text-olive text-sm leading-relaxed">Reacondicionamos containers marítimos para
+                                    albergar equipamiento de alta tecnología (Snoezelen). Economía circular pura que
+                                    elimina el costo de arrendar locales fijos.</p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 2 -->
+                        <div class="flex gap-4">
+                            <div
+                                class="flex-shrink-0 w-12 h-12 rounded-full bg-amethyst/30 flex items-center justify-center text-amethyst text-xl border border-amethyst/50">
+                                <i class="ph-bold ph-brain"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg text-dusty mb-1">IA Geoespacial y Mapas de Calor</h4>
+                                <p class="text-olive text-sm leading-relaxed">Cruzamos datos del INE con nuestra
+                                    plataforma. La IA automatiza el ruteo del container, enviándolo exactamente donde la
+                                    concentración de neurodivergencia es mayor.</p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 3 -->
+                        <div class="flex gap-4">
+                            <div
+                                class="flex-shrink-0 w-12 h-12 rounded-full bg-lavender/40 flex items-center justify-center text-dusty text-xl border border-lavender/60">
+                                <i class="ph-bold ph-stethoscope"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg text-dusty mb-1">Red de Derivación Activa (FHIR/HL7)</h4>
+                                <p class="text-olive text-sm leading-relaxed">Profesores, médicos rurales y APS generan
+                                    solicitudes en nuestra app. Este ecosistema de datos vivos convierte a los
+                                    profesionales locales en sensores de demanda.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Imagen decorativa / Collage conceptual -->
+                <div class="relative">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-tr from-amethyst/20 to-lightblue/20 rounded-[2rem] transform rotate-3 scale-105 z-0 border border-white/40">
+                    </div>
+                    <div class="glass-card rounded-[2rem] p-2 relative z-10 overflow-hidden">
+                        <!-- Simulated Image representation of a Snoezelen room inside a modern container -->
+                        <div
+                            class="bg-dark rounded-3xl h-[400px] w-full relative overflow-hidden flex items-center justify-center">
+                            <!-- Abstract shapes replacing actual photo -->
+                            <div
+                                class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgZmlsbD0ibm9uZSIvPgo8Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIyIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMikiLz4KPC9zdmc+')] opacity-50">
+                            </div>
+
+                            <div
+                                class="w-full h-full bg-gradient-to-br from-indigo-900 via-purple-800 to-dusty opacity-90 absolute">
+                            </div>
+
+                            <!-- Visual elements mimicking Snoezelen lights -->
+                            <div class="w-1 bg-cyan-400 h-full absolute left-1/4 shadow-[0_0_20px_#22d3ee] blur-[1px]">
+                            </div>
+                            <div
+                                class="w-2 bg-fuchsia-500 h-3/4 absolute right-1/3 bottom-0 shadow-[0_0_30px_#d946ef] rounded-t-full blur-[2px]">
+                            </div>
+                            <div class="absolute w-32 h-32 bg-white/10 rounded-full blur-2xl top-1/4"></div>
+
+                            <div class="relative z-10 text-center px-6">
+                                <div class="glass-panel inline-block px-4 py-2 rounded-full mb-4 border-white/20">
+                                    <span class="text-white text-xs font-bold tracking-widest"><i
+                                            class="ph-fill ph-magic-wand text-yellow-300"></i> ENTORNO CONTROLADO
+                                        SNOEZELEN</span>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white mb-2">Terapia en Movimiento</h3>
+                                <p class="text-white/80 text-sm">Prototipo de interior diseñado para la regulación
+                                    sensorial.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- EQUIPO (Dream Team) -->
+    <section id="equipo" class="py-20 px-6 relative z-10">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-olive font-bold tracking-wider uppercase text-sm mb-2 block">El Dream Team</span>
+                <h2 class="text-3xl lg:text-4xl font-black text-dusty mb-4">Expertise Clínico y Tecnológico</h2>
+                <p class="text-olive font-medium max-w-2xl mx-auto">Una startup de alto impacto social requiere un
+                    equipo capaz de entender la terapia profunda y ejecutar con tecnología global.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+
+                <!-- Francisca (CEO) -->
+                <div class="glass-card rounded-[2rem] p-8 text-center group">
+                    <div class="relative w-32 h-32 mx-auto mb-6">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-tr from-amethyst to-lightblue rounded-full transform rotate-6 group-hover:rotate-12 transition-transform duration-300">
+                        </div>
+                        <!-- Placeholder Foto Fundadora -->
+                        <div
+                            class="absolute inset-0 bg-white rounded-full overflow-hidden border-4 border-white shadow-lg flex items-center justify-center p-1">
+                            <!-- En una app real, aquí va un tag <img>. Uso un icono/inicial como fallback estilizado -->
+                            <div class="w-full h-full bg-lavender/30 rounded-full flex items-center justify-center">
+                                <span class="text-4xl font-black text-dusty">FH</span>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-dusty">Francisca Helmke</h3>
+                    <p class="text-amethyst font-bold text-sm mb-4">CEO & Líder Clínico</p>
+                    <p class="text-olive text-sm mb-6 leading-relaxed">Terapeuta Ocupacional especializada en
+                        Integración Sensorial y Floortime (9 años exp). Lidera el diseño terapéutico.</p>
+                    <a href="https://linkedin.com" target="_blank"
+                        class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white text-[#0a66c2] hover:bg-lightblue hover:text-white transition-colors shadow-sm">
+                        <i class="ph-fill ph-linkedin-logo text-xl"></i>
+                    </a>
+                </div>
+
+                <!-- Miguel (CTO) -->
+                <div class="glass-card rounded-[2rem] p-8 text-center mt-0 md:mt-12 group">
+                    <div class="relative w-32 h-32 mx-auto mb-6">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-tr from-olive to-lavender rounded-full transform -rotate-6 group-hover:-rotate-12 transition-transform duration-300">
+                        </div>
+                        <div
+                            class="absolute inset-0 bg-white rounded-full overflow-hidden border-4 border-white shadow-lg flex items-center justify-center p-1">
+                            <div class="w-full h-full bg-olive/20 rounded-full flex items-center justify-center">
+                                <span class="text-4xl font-black text-olive">MM</span>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-dusty">Miguel Moreira</h3>
+                    <p class="text-amethyst font-bold text-sm mb-4">CPO & Líder HealthTech</p>
+                    <p class="text-olive text-sm mb-6 leading-relaxed">Experto IA, automations y monetización (Founder
+                        Yoinn). Construye la plataforma geoespacial e interoperabilidad.</p>
+                    <a href="https://linkedin.com" target="_blank"
+                        class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white text-[#0a66c2] hover:bg-lightblue hover:text-white transition-colors shadow-sm">
+                        <i class="ph-fill ph-linkedin-logo text-xl"></i>
+                    </a>
+                </div>
+
+                <!-- Gilda (COO) -->
+                <div class="glass-card rounded-[2rem] p-8 text-center group">
+                    <div class="relative w-32 h-32 mx-auto mb-6">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-tr from-dusty to-amethyst rounded-full transform rotate-12 group-hover:rotate-45 transition-transform duration-500">
+                        </div>
+                        <div
+                            class="absolute inset-0 bg-white rounded-full overflow-hidden border-4 border-white shadow-lg flex items-center justify-center p-1">
+                            <div class="w-full h-full bg-dusty/20 rounded-full flex items-center justify-center">
+                                <span class="text-4xl font-black text-dusty">GL</span>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-dusty">Gilda Labbé</h3>
+                    <p class="text-amethyst font-bold text-sm mb-4">Directora de Operaciones</p>
+                    <p class="text-olive text-sm mb-6 leading-relaxed">Especialista en gestión de centros de desarrollo
+                        infantil (28 años exp). Lidera alianzas B2B y logística operativa.</p>
+                    <a href="https://linkedin.com" target="_blank"
+                        class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white text-[#0a66c2] hover:bg-lightblue hover:text-white transition-colors shadow-sm">
+                        <i class="ph-fill ph-linkedin-logo text-xl"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER / CTA -->
+    <footer id="contacto" class="relative z-10 mt-10">
+        <div class="glass-dark rounded-t-[3rem] px-6 py-16 border-t border-white/20">
+            <div class="max-w-5xl mx-auto text-center">
+                <div class="inline-block p-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-8">
+                    <i class="ph-bold ph-rocket-launch text-4xl text-white"></i>
+                </div>
+                <h2 class="text-3xl md:text-5xl font-black text-white mb-6">Transformemos la Salud en Los Lagos</h2>
+                <p class="text-lavender text-lg mb-10 max-w-2xl mx-auto">Nuestro piloto B2G busca municipios innovadores
+                    dispuestos a probar el futuro de la inclusión descentralizada.</p>
+
+                <form class="max-w-md mx-auto glass-panel p-2 rounded-full flex flex-col sm:flex-row shadow-2xl mb-16">
+                    <input type="email" placeholder="Correo institucional"
+                        class="bg-transparent border-none outline-none px-6 py-3 flex-grow text-dark font-medium placeholder-olive focus:ring-0">
+                    <button type="button"
+                        class="btn-glass px-8 py-3 rounded-full font-bold whitespace-nowrap mt-2 sm:mt-0"
+                        onclick="alert('¡Gracias! En un entorno real, esto enviará un lead al CRM de Miguel via n8n.')">Agendar
+                        Demo IA</button>
+                </form>
+
+                <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="flex items-center gap-2">
+                        <i class="ph ph-planet text-2xl text-lightblue"></i>
+                        <span class="font-bold text-white">Nodo<span class="text-lightblue">Móvil</span></span>
+                    </div>
+                    <div class="text-lavender text-sm font-medium">
+                        © 2026 Nodo Móvil SpA. Postulación CORFO Semilla Inicia.
+                    </div>
+                    <div class="flex gap-4">
+                        <a href="#" class="text-lavender hover:text-white transition-colors"><i
+                                class="ph-fill ph-instagram-logo text-2xl"></i></a>
+                        <a href="#" class="text-lavender hover:text-white transition-colors"><i
+                                class="ph-fill ph-envelope-simple text-2xl"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script Simple para Navbar interactiva -->
+    <script>
+        // Navbar glass effect on scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('py-2');
+                nav.classList.remove('py-4');
+                nav.firstElementChild.firstElementChild.classList.add('shadow-xl', 'bg-white/80');
+                nav.firstElementChild.firstElementChild.classList.remove('bg-white/40');
+            } else {
+                nav.classList.add('py-4');
+                nav.classList.remove('py-2');
+                nav.firstElementChild.firstElementChild.classList.add('bg-white/40');
+                nav.firstElementChild.firstElementChild.classList.remove('shadow-xl', 'bg-white/80');
+            }
+        });
+
+        // Mobile menu toggle (simple alert for mockup)
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            alert('En móvil, este botón abriría un overlay screen con glassmorphism para navegar a Inicio, Problema, Solución y Equipo.');
+        });
+    </script>
+</body>
+
+</html>
