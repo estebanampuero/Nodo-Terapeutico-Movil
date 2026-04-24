@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prototipo - Nodo Terapéutico Móvil</title>
+
+    <!-- Tipografía moderna y amigable -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&family=Quicksand:wght@400;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Configuración de Tailwind con Paleta Exacta -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        display: ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            olive: '#808d8e',
+                            dusty: '#766c7f',
+                            amethyst: '#947eb0',
+                            lavender: '#a3a5c3',
+                            lightblue: '#a9d2d5',
+                            dark: '#1e2029',
+                            light: '#f4f7f8'
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 5s ease-in-out infinite',
+                        'glow': 'glow 3s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        },
+                        glow: {
+                            'from': { boxShadow: '0 0 10px -5px #947eb0' },
+                            'to': { boxShadow: '0 0 25px 5px #a9d2d5' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* GLASSMORPHISM & MESH GRADIENTS */
+        body {
+            background-color: #f4f7f8;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(169, 210, 213, 0.4) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(148, 126, 176, 0.3) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(163, 165, 195, 0.4) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(118, 108, 127, 0.2) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: #1e2029;
+            overflow-x: hidden;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px 0 rgba(118, 108, 127, 0.15);
+        }
+
+        .glass-dark {
+            background: rgba(30, 32, 41, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(163, 165, 195, 0.2);
+            color: white;
+        }
+
+        /* Dispositivos (Mockups CSS) */
+        .mockup-phone {
+            border: 8px solid #1e2029;
+            border-radius: 40px;
+            background: #fff;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(118, 108, 127, 0.5);
+            overflow: hidden;
+        }
+
+        .mockup-phone::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40%;
+            height: 25px;
+            background: #1e2029;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            z-index: 10;
+        }
+
+        .mockup-desktop {
+            border: 12px solid #1e2029;
+            border-radius: 20px;
+            background: #1e2029;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(148, 126, 176, 0.4);
+            overflow: hidden;
+        }
+
+        .mockup-desktop-base {
+            width: 30%;
+            height: 20px;
+            background: #a3a5c3;
+            margin: 0 auto;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #766c7f, #947eb0, #808d8e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Map heat spots */
+        .heat-spot-red {
+            background: radial-gradient(circle, rgba(239, 68, 68, 0.8) 0%, rgba(239, 68, 68, 0) 70%);
+        }
+
+        .heat-spot-yellow {
+            background: radial-gradient(circle, rgba(234, 179, 8, 0.8) 0%, rgba(234, 179, 8, 0) 70%);
+        }
+    </style>
+</head>
+
+<body class="antialiased min-h-screen">
+
+    <!-- BARRA SUPERIOR PARA EVALUADOR -->
+    <div class="bg-brand-dark text-white text-sm py-2 px-6 flex justify-between items-center z-50 relative">
+        <div class="flex items-center gap-2">
+            <i class="ph-fill ph-info text-brand-lightblue"></i>
+            <span class="font-medium">Anexo Técnico - Postulación Semilla Inicia 2026</span>
+        </div>
+        <div class="font-bold text-brand-lavender">Región de Los Lagos</div>
+    </div>
+
+    <!-- HEADER / HERO -->
+    <header class="max-w-6xl mx-auto px-6 py-20 text-center relative z-10">
+        <div
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-brand-amethyst font-bold text-sm mb-6 border border-brand-amethyst/30">
+            <i class="ph-bold ph-rocket-launch"></i> Prototipo Híbrido: Hardware + Software
+        </div>
+        <h1 class="font-display text-5xl md:text-7xl font-black text-brand-dark mb-6 tracking-tight">
+            Nodo Terapéutico <span class="gradient-text">Móvil</span>
+        </h1>
+        <p class="text-xl text-brand-dusty max-w-2xl mx-auto font-medium leading-relaxed">
+            Una solución HealthTech descentralizada que cruza Inteligencia Territorial con Infraestructura Clínica
+            Circular para democratizar la salud en zonas rurales.
+        </p>
+
+        <div class="mt-12 flex flex-wrap justify-center gap-4">
+            <a href="#hardware"
+                class="px-6 py-3 rounded-full bg-brand-amethyst text-white font-bold hover:bg-brand-dusty transition-all shadow-lg hover:shadow-brand-amethyst/50 flex items-center gap-2">
+                <i class="ph-bold ph-container"></i> Ver Hardware
+            </a>
+            <a href="#software-app"
+                class="px-6 py-3 rounded-full glass font-bold text-brand-dark hover:bg-white/60 transition-all flex items-center gap-2">
+                <i class="ph-bold ph-device-mobile"></i> Ver App (Derivación)
+            </a>
+            <a href="#software-dashboard"
+                class="px-6 py-3 rounded-full glass font-bold text-brand-dark hover:bg-white/60 transition-all flex items-center gap-2">
+                <i class="ph-bold ph-chart-line-up"></i> Ver Dashboard (IA)
+            </a>
+        </div>
+    </header>
+
+    <!-- PILAR 1: HARDWARE (ECONOMÍA CIRCULAR) -->
+    <section id="hardware" class="max-w-6xl mx-auto px-6 py-24">
+        <div class="glass rounded-[3rem] p-8 md:p-12">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <span class="text-brand-olive font-bold uppercase tracking-widest text-sm mb-2 block">Pilar 1:
+                        Economía Circular</span>
+                    <h2 class="font-display text-4xl font-bold text-brand-dark mb-6">Infraestructura Premium, Costo
+                        Eficiente.</h2>
+                    <p class="text-brand-dusty mb-6 leading-relaxed">
+                        Reacondicionamos containers marítimos (Upcycling) eliminando la necesidad de construir costosos
+                        centros fijos. Esto reduce el CAPEX y permite un despliegue rápido.
+                    </p>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <i class="ph-fill ph-check-circle text-brand-lightblue text-2xl mt-1"></i>
+                            <div>
+                                <strong class="text-brand-dark block">Sala Snoezelen Integrada</strong>
+                                <span class="text-sm text-brand-olive">Aislamiento acústico, columnas de burbujas y
+                                    fibra óptica para regulación pasiva.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="ph-fill ph-check-circle text-brand-lightblue text-2xl mt-1"></i>
+                            <div>
+                                <strong class="text-brand-dark block">Gimnasio de Integración Sensorial</strong>
+                                <span class="text-sm text-brand-olive">Anclajes estructurales certificados para
+                                    columpios propioceptivos y vestibulares.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Mockup Hardware (Render Conceptual) -->
+                <div class="relative animate-float">
+                    <div
+                        class="bg-brand-dark rounded-3xl overflow-hidden aspect-[4/3] relative shadow-2xl border-4 border-white">
+                        <!-- Simulated Container Exterior -->
+                        <div class="absolute inset-0 bg-gradient-to-br from-brand-dusty to-brand-olive opacity-50">
+                        </div>
+
+                        <!-- Simulated interior lights -->
+                        <div class="absolute inset-0 flex items-center justify-center overflow-hidden">
+                            <div
+                                class="w-[120%] h-[120%] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIi8+PGxpbmUgeDE9IjAiIHkxPSIxMCIgeDI9IjIwIiB5Mj0iMTAiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+')] rotate-12">
+                            </div>
+                            <div class="absolute w-40 h-full bg-brand-lightblue/30 blur-3xl left-10 animate-pulse-slow">
+                            </div>
+                            <div class="absolute w-40 h-full bg-brand-amethyst/30 blur-3xl right-10 animate-pulse-slow"
+                                style="animation-delay: 2s"></div>
+                        </div>
+
+                        <!-- UI Overlay on Render -->
+                        <div
+                            class="absolute bottom-4 left-4 right-4 glass-dark rounded-2xl p-4 flex justify-between items-center">
+                            <div>
+                                <div class="text-xs text-brand-lavender font-bold">MODELO:</div>
+                                <div class="font-bold text-white">Container HC 40ft (Modificado)</div>
+                            </div>
+                            <i class="ph-fill ph-arrows-out text-2xl text-brand-lightblue"></i>
+                        </div>
+                        <div
+                            class="absolute top-4 left-4 bg-brand-amethyst text-white text-xs font-bold px-3 py-1 rounded-full">
+                            RENDER CONCEPTUAL
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PILAR 2: SOFTWARE (RED DE DERIVACIÓN) -->
+    <section id="software-app" class="max-w-6xl mx-auto px-6 py-12 relative z-10">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+
+            <!-- Phone Mockup -->
+            <div class="flex justify-center md:justify-end order-2 md:order-1">
+                <div class="mockup-phone w-[300px] h-[600px] flex flex-col bg-brand-light">
+                    <!-- App Header -->
+                    <div class="bg-brand-amethyst text-white pt-12 pb-4 px-6 rounded-b-3xl shadow-sm">
+                        <div class="flex justify-between items-center mb-4">
+                            <i class="ph-bold ph-list text-xl"></i>
+                            <span class="font-bold tracking-wide text-sm">Red APS Los Lagos</span>
+                            <div
+                                class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold text-xs">
+                                DR</div>
+                        </div>
+                        <h3 class="font-display font-bold text-xl">Nueva Derivación</h3>
+                    </div>
+
+                    <!-- App Content -->
+                    <div class="flex-1 p-6 overflow-y-auto custom-scrollbar">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm mb-4 border border-gray-100">
+                            <label class="text-xs font-bold text-brand-olive uppercase tracking-wider mb-1 block">RUT
+                                Paciente (Validado FONASA)</label>
+                            <div
+                                class="bg-gray-50 rounded-lg p-3 text-sm font-medium text-brand-dark flex justify-between items-center border border-gray-200">
+                                22.456.789-K <i class="ph-fill ph-check-circle text-green-500 text-lg"></i>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-2xl shadow-sm mb-4 border border-gray-100">
+                            <label class="text-xs font-bold text-brand-olive uppercase tracking-wider mb-1 block">Motivo
+                                de Derivación</label>
+                            <div
+                                class="bg-brand-lightblue/20 text-brand-dark px-3 py-1.5 rounded-md inline-block text-sm font-medium mb-2 border border-brand-lightblue/50">
+                                TEA Nivel 2</div>
+                            <div
+                                class="bg-brand-lavender/20 text-brand-dark px-3 py-1.5 rounded-md inline-block text-sm font-medium border border-brand-lavender/50">
+                                Desregulación Sensorial</div>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-2xl shadow-sm mb-4 border border-gray-100">
+                            <label
+                                class="text-xs font-bold text-brand-olive uppercase tracking-wider mb-2 block">Geolocalización
+                                Rural</label>
+                            <div class="h-24 bg-gray-100 rounded-xl relative overflow-hidden mb-2">
+                                <!-- Fake map pattern -->
+                                <div
+                                    class="absolute inset-0 opacity-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PHBhdGggZD0iTTAgMGwyMCAyME0yMCAwbC0yMCAyMCIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjEiLz48L3N2Zz4=')]">
+                                </div>
+                                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                    <i
+                                        class="ph-fill ph-map-pin text-3xl text-brand-amethyst drop-shadow-md animate-bounce"></i>
+                                </div>
+                            </div>
+                            <div class="text-xs text-brand-dusty font-medium"><i
+                                    class="ph-bold ph-navigation-arrow"></i> Posta Rural Cochamó</div>
+                        </div>
+
+                        <button
+                            class="w-full bg-brand-dusty text-white font-bold py-4 rounded-2xl shadow-md shadow-brand-dusty/30 mt-2 active:scale-95 transition-transform flex items-center justify-center gap-2">
+                            <i class="ph-bold ph-paper-plane-tilt"></i> Enviar a IA Central
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Text Content -->
+            <div class="order-1 md:order-2">
+                <span class="text-brand-olive font-bold uppercase tracking-widest text-sm mb-2 block">Pilar 2:
+                    Interoperabilidad</span>
+                <h2 class="font-display text-4xl font-bold text-brand-dark mb-6">Sensores Humanos en Terreno.</h2>
+                <p class="text-brand-dusty mb-6 leading-relaxed">
+                    No hacemos operativos a ciegas. Nuestra plataforma (HL7/FHIR ready) permite que médicos rurales,
+                    profesores y equipos APS generen alertas directas desde su celular cuando detectan un niño sin
+                    atención.
+                </p>
+                <div class="glass p-6 rounded-3xl border-l-4 border-l-brand-amethyst">
+                    <h4 class="font-bold text-brand-dark mb-2">Dato Clave de Postulación:</h4>
+                    <p class="text-sm text-brand-dusty">
+                        Nuestro equipo tecnológico ya cuenta con experiencia comprobada construyendo este tipo de
+                        interfaces, garantizando a CORFO **Cero Riesgo Tecnológico** en la ejecución de los fondos
+                        Semilla Inicia.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- PILAR 3: SOFTWARE (DASHBOARD IA) -->
+    <section id="software-dashboard" class="max-w-6xl mx-auto px-6 py-24 relative z-10">
+        <div class="text-center mb-16">
+            <span class="text-brand-olive font-bold uppercase tracking-widest text-sm mb-2 block">Pilar 3: Inteligencia
+                Territorial</span>
+            <h2 class="font-display text-4xl font-bold text-brand-dark">Algoritmo de Ruteo Dinámico (Mapas de Calor)
+            </h2>
+        </div>
+
+        <div class="w-full max-w-5xl mx-auto">
+            <div class="mockup-desktop bg-brand-dark">
+                <!-- App Window Header -->
+                <div class="bg-gray-900 h-8 flex items-center px-4 gap-2 border-b border-white/10">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    <div class="mx-auto text-xs font-bold text-brand-olive flex items-center gap-2">
+                        <i class="ph-bold ph-lock-key"></i> admin.nodomovil.cl
+                    </div>
+                </div>
+
+                <!-- Dashboard Content -->
+                <div class="p-6 grid grid-cols-12 gap-6 h-[500px]">
+                    <!-- Sidebar -->
+                    <div class="col-span-3 flex flex-col gap-4">
+                        <div class="bg-white/5 rounded-xl p-4 border border-white/10">
+                            <h3 class="text-xs font-bold text-brand-lavender uppercase mb-1">Total Derivaciones</h3>
+                            <div class="text-3xl font-display font-black text-white">142 <span
+                                    class="text-sm font-medium text-green-400">+12%</span></div>
+                        </div>
+                        <div class="bg-white/5 rounded-xl p-4 border border-white/10">
+                            <h3 class="text-xs font-bold text-brand-lavender uppercase mb-1">Contrato Activo</h3>
+                            <div class="text-lg font-bold text-brand-lightblue mb-1">Muni. Puerto Varas</div>
+                            <div class="w-full bg-white/10 rounded-full h-1.5 mt-2">
+                                <div class="bg-brand-amethyst h-1.5 rounded-full w-3/4"></div>
+                            </div>
+                            <div class="text-[10px] text-brand-olive mt-1 text-right">75% Horas Ejecutadas</div>
+                        </div>
+                        <div class="flex-1 bg-white/5 rounded-xl p-4 border border-white/10 overflow-hidden">
+                            <h3 class="text-xs font-bold text-brand-lavender uppercase mb-3">Sugerencia IA</h3>
+                            <div class="bg-brand-amethyst/20 border border-brand-amethyst/50 rounded-lg p-3">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <i class="ph-fill ph-warning-circle text-brand-amethyst"></i>
+                                    <span class="text-xs font-bold text-white">Alerta de Concentración</span>
+                                </div>
+                                <p class="text-[11px] text-brand-lavender">Se detectaron 18 nuevos casos en sector
+                                    "Nueva Braunau". Se sugiere reubicar Nodo en 48 hrs.</p>
+                                <button
+                                    class="mt-3 w-full bg-brand-amethyst text-white text-[10px] font-bold py-1.5 rounded">Aprobar
+                                    Ruta</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Map Area -->
+                    <div class="col-span-9 bg-[#1a1c23] rounded-xl relative overflow-hidden border border-white/10">
+                        <!-- Simulated Topo Map Lines -->
+                        <div class="absolute inset-0 opacity-10"
+                            style="background-image: repeating-radial-gradient( circle at 0 0, transparent 0, #ffffff 10px ), repeating-linear-gradient( #1a1c23, #1a1c23 );">
+                        </div>
+
+                        <!-- Heat spots -->
+                        <div class="absolute top-1/4 left-1/3 w-32 h-32 heat-spot-red mix-blend-screen animate-pulse">
+                        </div>
+                        <div class="absolute top-1/3 left-[35%] w-20 h-20 heat-spot-yellow mix-blend-screen"></div>
+
+                        <div
+                            class="absolute bottom-1/3 right-1/4 w-48 h-48 heat-spot-red mix-blend-screen animate-pulse-slow">
+                        </div>
+                        <div class="absolute bottom-[30%] right-[22%] w-24 h-24 heat-spot-yellow mix-blend-screen">
+                        </div>
+
+                        <!-- UI Overlay on Map -->
+                        <div
+                            class="absolute top-4 left-4 bg-brand-dark/80 backdrop-blur border border-white/20 rounded-lg p-3">
+                            <div class="text-white font-bold text-sm mb-2 flex items-center gap-2"><i
+                                    class="ph-bold ph-map-trifold"></i> Región de Los Lagos</div>
+                            <div class="flex items-center gap-2 text-xs text-brand-lavender">
+                                <span class="w-2 h-2 rounded-full bg-red-500"></span> Alta demanda crítica
+                            </div>
+                            <div class="flex items-center gap-2 text-xs text-brand-lavender mt-1">
+                                <span class="w-2 h-2 rounded-full bg-yellow-500"></span> Media demanda
+                            </div>
+                        </div>
+
+                        <!-- Truck location -->
+                        <div class="absolute top-1/3 right-1/2 flex flex-col items-center">
+                            <div
+                                class="bg-brand-lightblue text-brand-dark text-[10px] font-bold px-2 py-1 rounded-md mb-1 shadow-lg border border-white/50">
+                                Nodo Móvil #01</div>
+                            <div
+                                class="w-6 h-6 bg-brand-lightblue rounded-full border-2 border-white flex items-center justify-center shadow-lg shadow-brand-lightblue/50 animate-bounce">
+                                <i class="ph-bold ph-truck text-brand-dark text-xs"></i>
+                            </div>
+                        </div>
+
+                        <!-- Route Line (SVG Simulation) -->
+                        <svg class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;">
+                            <path d="M 500 170 Q 550 250 650 350" fill="none" stroke="#a9d2d5" stroke-width="3"
+                                stroke-dasharray="5,5" class="animate-pulse" />
+                        </svg>
+
+                    </div>
+                </div>
+            </div>
+            <div class="mockup-desktop-base"></div>
+        </div>
+
+        <div class="max-w-2xl mx-auto mt-12 text-center">
+            <p class="text-brand-dusty font-medium text-lg leading-relaxed">
+                El algoritmo elimina las decisiones políticas o intuitivas. El container viaja y se instala
+                temporalmente <strong class="text-brand-dark">exclusivamente donde los datos demuestran la mayor brecha
+                    de atención</strong>, garantizando una ocupación del 100% y el máximo ROI social.
+            </p>
+        </div>
+    </section>
+
+    <!-- FOOTER PARA CORFO -->
+    <footer class="bg-brand-dark text-center py-12 px-6 border-t border-brand-lavender/20">
+        <div class="max-w-4xl mx-auto">
+            <h3 class="font-display font-bold text-2xl text-white mb-4">¿Por qué este proyecto debe ganar Semilla
+                Inicia?</h3>
+            <p class="text-brand-lavender mb-8 max-w-2xl mx-auto">
+                Tenemos el conocimiento clínico, el diseño técnico, la arquitectura de software lista y validación
+                comercial inicial. Solo nos falta el financiamiento semilla para construir este prototipo y conectar el
+                mundo rural.
+            </p>
+            <div class="inline-flex flex-col items-center">
+                <div
+                    class="w-16 h-16 rounded-full bg-gradient-to-tr from-brand-amethyst to-brand-lightblue flex items-center justify-center mb-4 shadow-lg shadow-brand-amethyst/30">
+                    <span class="font-display font-black text-white text-xl">NM</span>
+                </div>
+                <div class="text-white font-bold tracking-widest text-sm">NODO MÓVIL</div>
+                <div class="text-brand-dusty text-xs mt-1">Innovación Social & HealthTech</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom Scrollbar styling -->
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+    </style>
+</body>
+
+</html>
