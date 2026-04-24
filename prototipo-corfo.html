@@ -16,6 +16,10 @@
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
+    <!-- Mapbox GL JS -->
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js'></script>
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -145,6 +149,30 @@
         .heat-spot-yellow {
             background: radial-gradient(circle, rgba(234, 179, 8, 0.8) 0%, rgba(234, 179, 8, 0) 70%);
         }
+
+        /* Hardware Slider */
+        .hw-slide { transition: opacity 0.65s ease; }
+
+        /* Mapbox Popup */
+        .mapboxgl-popup-content {
+            border-radius: 14px !important;
+            padding: 12px 14px !important;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.25) !important;
+            font-family: 'Outfit', sans-serif;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .mapboxgl-popup-close-button {
+            font-size: 16px; color: #766c7f;
+            padding: 4px 8px; right: 2px; top: 2px;
+        }
+        .mapboxgl-ctrl-group {
+            background: rgba(30,32,41,0.85) !important;
+            border: 1px solid rgba(255,255,255,0.15) !important;
+            border-radius: 8px !important;
+        }
+        .mapboxgl-ctrl-group button { background: transparent !important; }
+        .mapboxgl-ctrl-icon { filter: invert(0.75); }
+        .mapboxgl-canvas { border-radius: 12px; }
     </style>
 </head>
 
@@ -222,37 +250,97 @@
                     </ul>
                 </div>
 
-                <!-- Mockup Hardware (Render Conceptual) -->
-                <div class="relative animate-float">
-                    <div
-                        class="bg-brand-dark rounded-3xl overflow-hidden aspect-[4/3] relative shadow-2xl border-4 border-white">
-                        <!-- Simulated Container Exterior -->
-                        <div class="absolute inset-0 bg-gradient-to-br from-brand-dusty to-brand-olive opacity-50">
+                <!-- Slider Pilar 1: Infraestructura Circular -->
+                <div class="relative" id="hardware-slider">
+                    <div class="bg-brand-dark rounded-3xl overflow-hidden aspect-[4/3] relative shadow-2xl border-4 border-white">
+
+                        <!-- SLIDE 1: Container Exterior -->
+                        <div class="hw-slide absolute inset-0 opacity-100" id="hw-slide-0">
+                            <div class="absolute inset-0 bg-gradient-to-br from-[#3a3030] via-[#5a5040] to-brand-olive"></div>
+                            <div class="absolute inset-0" style="background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0px, rgba(255,255,255,0.035) 1px, transparent 1px, transparent 50px), repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0px, rgba(255,255,255,0.035) 1px, transparent 1px, transparent 50px);"></div>
+                            <!-- Simulated container shape -->
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="w-52 h-32 mx-auto mb-5 relative">
+                                        <div class="w-full h-full border-[3px] border-brand-olive/60 rounded-lg flex items-center justify-center bg-brand-dark/40 backdrop-blur-sm relative overflow-hidden">
+                                            <div class="absolute left-0 top-0 bottom-0 w-3 bg-brand-lightblue/25 border-r border-brand-lightblue/20"></div>
+                                            <div class="absolute right-0 top-0 bottom-0 w-3 bg-brand-lightblue/25 border-l border-brand-lightblue/20"></div>
+                                            <div class="absolute top-1/3 left-3 right-3 h-px bg-white/10"></div>
+                                            <div class="absolute top-2/3 left-3 right-3 h-px bg-white/10"></div>
+                                            <i class="ph-bold ph-package text-5xl text-white/50"></i>
+                                        </div>
+                                        <div class="absolute -bottom-2 left-8 right-8 h-2 bg-brand-dark/60 rounded-b blur-sm"></div>
+                                    </div>
+                                    <div class="bg-black/50 backdrop-blur-sm px-5 py-2 rounded-full text-white text-[11px] font-bold tracking-widest border border-white/10">
+                                        EXTERIOR — HC 40ft MODIFICADO
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Info bar -->
+                            <div class="absolute bottom-4 left-4 right-4 glass-dark rounded-2xl p-3 flex justify-between items-center">
+                                <div>
+                                    <div class="text-[10px] text-brand-lavender font-bold uppercase tracking-wider">Modelo</div>
+                                    <div class="font-bold text-white text-sm">Container HC 40ft (Modificado)</div>
+                                </div>
+                                <i class="ph-fill ph-arrows-out text-xl text-brand-lightblue"></i>
+                            </div>
                         </div>
 
-                        <!-- Simulated interior lights -->
-                        <div class="absolute inset-0 flex items-center justify-center overflow-hidden">
-                            <div
-                                class="w-[120%] h-[120%] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIi8+PGxpbmUgeDE9IjAiIHkxPSIxMCIgeDI9IjIwIiB5Mj0iMTAiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+')] rotate-12">
+                        <!-- SLIDE 2: Interior Snoezelen -->
+                        <div class="hw-slide absolute inset-0 opacity-0" id="hw-slide-1">
+                            <div class="absolute inset-0 bg-gradient-to-br from-indigo-950 via-purple-900 to-[#4a3065]"></div>
+                            <!-- Light columns -->
+                            <div class="absolute left-[28%] top-0 bottom-0 w-[2px] bg-cyan-400/80" style="box-shadow: 0 0 22px 4px rgba(34,211,238,0.6);"></div>
+                            <div class="absolute right-[32%] bottom-0 h-3/4 w-[3px] bg-fuchsia-400/80 rounded-t-full" style="box-shadow: 0 0 28px 5px rgba(232,121,249,0.55);"></div>
+                            <!-- Ambient glows -->
+                            <div class="absolute w-56 h-56 rounded-full blur-3xl top-1/4 left-1/4 animate-pulse-slow" style="background: rgba(139,92,246,0.2);"></div>
+                            <div class="absolute w-40 h-40 rounded-full blur-2xl bottom-1/3 right-1/4 animate-pulse-slow" style="background: rgba(34,211,238,0.15); animation-delay: 1.5s;"></div>
+                            <!-- Dot-matrix floor -->
+                            <div class="absolute bottom-0 left-0 right-0 h-1/3" style="background: radial-gradient(circle at 50% 100%, rgba(148,126,176,0.15) 0%, transparent 70%);"></div>
+                            <!-- Center label -->
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center px-8">
+                                    <div class="glass-dark inline-block px-5 py-2 rounded-full mb-5 border border-white/20">
+                                        <span class="text-white text-[11px] font-bold tracking-widest">
+                                            <i class="ph-fill ph-magic-wand text-yellow-300"></i> SALA SNOEZELEN INTEGRADA
+                                        </span>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-white mb-2">Regulación Sensorial</h3>
+                                    <p class="text-white/55 text-sm">Columnas de burbujas · Fibra óptica · Aislamiento acústico</p>
+                                </div>
                             </div>
-                            <div class="absolute w-40 h-full bg-brand-lightblue/30 blur-3xl left-10 animate-pulse-slow">
+                            <!-- Info bar -->
+                            <div class="absolute bottom-4 left-4 right-4 glass-dark rounded-2xl p-3 flex justify-between items-center">
+                                <div>
+                                    <div class="text-[10px] text-brand-lavender font-bold uppercase tracking-wider">Interior</div>
+                                    <div class="font-bold text-white text-sm">Sala Snoezelen + Integración Sensorial</div>
+                                </div>
+                                <i class="ph-fill ph-sparkle text-xl text-yellow-300"></i>
                             </div>
-                            <div class="absolute w-40 h-full bg-brand-amethyst/30 blur-3xl right-10 animate-pulse-slow"
-                                style="animation-delay: 2s"></div>
                         </div>
 
-                        <!-- UI Overlay on Render -->
-                        <div
-                            class="absolute bottom-4 left-4 right-4 glass-dark rounded-2xl p-4 flex justify-between items-center">
-                            <div>
-                                <div class="text-xs text-brand-lavender font-bold">MODELO:</div>
-                                <div class="font-bold text-white">Container HC 40ft (Modificado)</div>
-                            </div>
-                            <i class="ph-fill ph-arrows-out text-2xl text-brand-lightblue"></i>
-                        </div>
-                        <div
-                            class="absolute top-4 left-4 bg-brand-amethyst text-white text-xs font-bold px-3 py-1 rounded-full">
+                        <!-- Badge -->
+                        <div class="absolute top-4 left-4 bg-brand-amethyst text-white text-xs font-bold px-3 py-1 rounded-full z-10">
                             RENDER CONCEPTUAL
+                        </div>
+
+                        <!-- Slide counter badge -->
+                        <div class="absolute top-4 right-20 bg-black/40 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1 rounded-full z-10 border border-white/10" id="hw-counter">1 / 2</div>
+
+                        <!-- Arrows -->
+                        <div class="absolute top-4 right-4 flex gap-1.5 z-10">
+                            <button onclick="hwSlider(-1)" class="w-8 h-8 rounded-full bg-black/50 backdrop-blur-sm text-white flex items-center justify-center hover:bg-brand-amethyst transition-all border border-white/20">
+                                <i class="ph-bold ph-caret-left text-xs"></i>
+                            </button>
+                            <button onclick="hwSlider(1)" class="w-8 h-8 rounded-full bg-black/50 backdrop-blur-sm text-white flex items-center justify-center hover:bg-brand-amethyst transition-all border border-white/20">
+                                <i class="ph-bold ph-caret-right text-xs"></i>
+                            </button>
+                        </div>
+
+                        <!-- Dots -->
+                        <div class="absolute left-0 right-0 flex justify-center gap-2 z-10" style="bottom: 80px;">
+                            <button onclick="hwGoTo(0)" class="hw-dot w-2.5 h-2.5 rounded-full transition-all duration-300" id="hw-dot-0" style="background: white; transform: scale(1.3);"></button>
+                            <button onclick="hwGoTo(1)" class="hw-dot w-2.5 h-2.5 rounded-full transition-all duration-300" id="hw-dot-1" style="background: rgba(255,255,255,0.35); transform: scale(0.9);"></button>
                         </div>
                     </div>
                 </div>
@@ -404,54 +492,32 @@
                         </div>
                     </div>
 
-                    <!-- Map Area -->
-                    <div class="col-span-9 bg-[#1a1c23] rounded-xl relative overflow-hidden border border-white/10">
-                        <!-- Simulated Topo Map Lines -->
-                        <div class="absolute inset-0 opacity-10"
-                            style="background-image: repeating-radial-gradient( circle at 0 0, transparent 0, #ffffff 10px ), repeating-linear-gradient( #1a1c23, #1a1c23 );">
-                        </div>
+                    <!-- Map Area — Mapbox GL JS (Provincia de Llanquihue) -->
+                    <div class="col-span-9 rounded-xl relative overflow-hidden border border-white/10" style="min-height: 390px;">
+                        <div id="map-llanquihue" style="width: 100%; height: 100%; min-height: 390px;"></div>
 
-                        <!-- Heat spots -->
-                        <div class="absolute top-1/4 left-1/3 w-32 h-32 heat-spot-red mix-blend-screen animate-pulse">
-                        </div>
-                        <div class="absolute top-1/3 left-[35%] w-20 h-20 heat-spot-yellow mix-blend-screen"></div>
-
-                        <div
-                            class="absolute bottom-1/3 right-1/4 w-48 h-48 heat-spot-red mix-blend-screen animate-pulse-slow">
-                        </div>
-                        <div class="absolute bottom-[30%] right-[22%] w-24 h-24 heat-spot-yellow mix-blend-screen">
-                        </div>
-
-                        <!-- UI Overlay on Map -->
-                        <div
-                            class="absolute top-4 left-4 bg-brand-dark/80 backdrop-blur border border-white/20 rounded-lg p-3">
-                            <div class="text-white font-bold text-sm mb-2 flex items-center gap-2"><i
-                                    class="ph-bold ph-map-trifold"></i> Región de Los Lagos</div>
-                            <div class="flex items-center gap-2 text-xs text-brand-lavender">
-                                <span class="w-2 h-2 rounded-full bg-red-500"></span> Alta demanda crítica
+                        <!-- Leyenda overlay -->
+                        <div class="absolute top-3 left-3 bg-brand-dark/90 backdrop-blur-sm border border-white/20 rounded-xl p-3 z-10 pointer-events-none">
+                            <div class="text-white font-bold text-xs mb-2.5 flex items-center gap-1.5">
+                                <i class="ph-bold ph-map-trifold text-brand-lightblue"></i> Provincia de Llanquihue
                             </div>
-                            <div class="flex items-center gap-2 text-xs text-brand-lavender mt-1">
-                                <span class="w-2 h-2 rounded-full bg-yellow-500"></span> Media demanda
+                            <div class="flex items-center gap-2 text-[10px] text-brand-lavender mb-1.5">
+                                <span class="w-2 h-2 rounded-full bg-red-500 flex-shrink-0 inline-block"></span> Alta demanda crítica
+                            </div>
+                            <div class="flex items-center gap-2 text-[10px] text-brand-lavender mb-1.5">
+                                <span class="w-2 h-2 rounded-full bg-yellow-400 flex-shrink-0 inline-block"></span> Media demanda
+                            </div>
+                            <div class="flex items-center gap-2 text-[10px] text-brand-lavender">
+                                <span class="w-2.5 h-2.5 rounded-full bg-brand-lightblue flex-shrink-0 inline-block border-2 border-white"></span> Nodo Móvil activo
                             </div>
                         </div>
 
-                        <!-- Truck location -->
-                        <div class="absolute top-1/3 right-1/2 flex flex-col items-center">
-                            <div
-                                class="bg-brand-lightblue text-brand-dark text-[10px] font-bold px-2 py-1 rounded-md mb-1 shadow-lg border border-white/50">
-                                Nodo Móvil #01</div>
-                            <div
-                                class="w-6 h-6 bg-brand-lightblue rounded-full border-2 border-white flex items-center justify-center shadow-lg shadow-brand-lightblue/50 animate-bounce">
-                                <i class="ph-bold ph-truck text-brand-dark text-xs"></i>
-                            </div>
+                        <!-- Hint -->
+                        <div class="absolute bottom-3 right-3 bg-brand-dark/80 backdrop-blur-sm border border-white/10 rounded-lg px-2.5 py-1.5 z-10 pointer-events-none">
+                            <span class="text-brand-lavender text-[9px] font-medium flex items-center gap-1">
+                                <i class="ph-bold ph-cursor-click text-brand-lightblue"></i> Clic para ver datos del municipio
+                            </span>
                         </div>
-
-                        <!-- Route Line (SVG Simulation) -->
-                        <svg class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;">
-                            <path d="M 500 170 Q 550 250 650 350" fill="none" stroke="#a9d2d5" stroke-width="3"
-                                stroke-dasharray="5,5" class="animate-pulse" />
-                        </svg>
-
                     </div>
                 </div>
             </div>
@@ -464,6 +530,74 @@
                 temporalmente <strong class="text-brand-dark">exclusivamente donde los datos demuestran la mayor brecha
                     de atención</strong>, garantizando una ocupación del 100% y el máximo ROI social.
             </p>
+        </div>
+    </section>
+
+    <!-- SECCIÓN: DATA EXPLORER (SQL Interactivo) -->
+    <section id="data-explorer" class="max-w-6xl mx-auto px-6 py-16 relative z-10">
+        <div class="text-center mb-10">
+            <span class="text-brand-olive font-bold uppercase tracking-widest text-sm mb-2 block">Inteligencia de Datos</span>
+            <h2 class="font-display text-4xl font-bold text-brand-dark">Explorador de Derivaciones</h2>
+            <p class="text-brand-dusty mt-3 max-w-2xl mx-auto text-sm">Base de datos simulada — pacientes de la Provincia de Llanquihue con historial clínico interactivo. Haz clic en las consultas para filtrar.</p>
+        </div>
+
+        <div class="glass rounded-3xl p-6 md:p-8">
+            <!-- Terminal SQL -->
+            <div class="bg-brand-dark rounded-2xl p-4 mb-6">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="flex gap-1.5">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <span class="text-brand-olive text-xs font-mono">nodo_db — psql</span>
+                </div>
+                <div class="flex items-start gap-2">
+                    <span class="text-green-400 font-mono font-bold text-sm flex-shrink-0">nodo_db=#</span>
+                    <span id="sql-display" class="text-brand-lightblue font-mono text-sm break-all"></span>
+                    <span class="text-white font-mono animate-pulse text-sm flex-shrink-0">█</span>
+                </div>
+            </div>
+
+            <!-- Query Buttons -->
+            <div class="flex flex-wrap gap-2 mb-6">
+                <button onclick="runQuery('all')" id="q-all" class="sql-q-btn px-3 py-1.5 rounded-lg text-xs font-bold font-mono transition-all bg-brand-dark text-brand-lightblue border border-brand-lightblue/50 hover:bg-brand-lightblue/15">SELECT * FROM pacientes</button>
+                <button onclick="runQuery('alta')" id="q-alta" class="sql-q-btn px-3 py-1.5 rounded-lg text-xs font-bold font-mono transition-all bg-brand-dark text-yellow-400 border border-yellow-400/40 hover:bg-yellow-400/10">WHERE prioridad = 'Alta'</button>
+                <button onclick="runQuery('tea')" id="q-tea" class="sql-q-btn px-3 py-1.5 rounded-lg text-xs font-bold font-mono transition-all bg-brand-dark text-brand-amethyst border border-brand-amethyst/40 hover:bg-brand-amethyst/10">WHERE diagnostico LIKE 'TEA%'</button>
+                <button onclick="runQuery('activo')" id="q-activo" class="sql-q-btn px-3 py-1.5 rounded-lg text-xs font-bold font-mono transition-all bg-brand-dark text-green-400 border border-green-400/40 hover:bg-green-400/10">WHERE estado = 'Activo'</button>
+                <button onclick="runQuery('pto_montt')" id="q-pto_montt" class="sql-q-btn px-3 py-1.5 rounded-lg text-xs font-bold font-mono transition-all bg-brand-dark text-brand-lavender border border-brand-lavender/40 hover:bg-brand-lavender/10">WHERE municipio = 'Puerto Montt'</button>
+            </div>
+
+            <!-- Results Table -->
+            <div class="overflow-x-auto rounded-xl border border-brand-lavender/20">
+                <table class="w-full text-sm" style="min-width: 720px;">
+                    <thead>
+                        <tr class="bg-brand-dark text-brand-lavender text-[10px] uppercase tracking-wider">
+                            <th class="px-4 py-3 text-left font-bold">ID</th>
+                            <th class="px-4 py-3 text-left font-bold">Nombre Paciente</th>
+                            <th class="px-4 py-3 text-left font-bold">Edad</th>
+                            <th class="px-4 py-3 text-left font-bold">Diagnóstico</th>
+                            <th class="px-4 py-3 text-left font-bold">Municipio</th>
+                            <th class="px-4 py-3 text-left font-bold">Fecha Deriv.</th>
+                            <th class="px-4 py-3 text-left font-bold">Estado</th>
+                            <th class="px-4 py-3 text-left font-bold">Prioridad</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sql-results" class="divide-y divide-brand-lavender/10">
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Stats Footer -->
+            <div class="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-brand-dusty font-medium items-center">
+                <span id="result-count" class="text-green-400 font-mono font-bold"></span>
+                <span class="text-brand-lavender/40">|</span>
+                <span>Tiempo: <strong class="text-brand-dark font-mono">2ms</strong></span>
+                <span class="text-brand-lavender/40">|</span>
+                <span>Base: <strong class="text-brand-lightblue font-mono">nodo_db v1.0 (Simulado)</strong></span>
+                <span class="text-brand-lavender/40">|</span>
+                <span>Tabla: <strong class="text-brand-amethyst font-mono">pacientes (12 registros)</strong></span>
+            </div>
         </div>
     </section>
 
@@ -490,23 +624,244 @@
 
     <!-- Custom Scrollbar styling -->
     <style>
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #d1d5db;
-            border-radius: 4px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #9ca3af;
-        }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
     </style>
+
+    <script>
+    // ─────────────────────────────────────────
+    // HARDWARE SLIDER
+    // ─────────────────────────────────────────
+    let hwCurrent = 0;
+    const HW_TOTAL = 2;
+
+    function hwGoTo(index) {
+        document.getElementById('hw-slide-' + hwCurrent).style.opacity = '0';
+        document.getElementById('hw-dot-' + hwCurrent).style.background = 'rgba(255,255,255,0.35)';
+        document.getElementById('hw-dot-' + hwCurrent).style.transform = 'scale(0.9)';
+        hwCurrent = ((index % HW_TOTAL) + HW_TOTAL) % HW_TOTAL;
+        document.getElementById('hw-slide-' + hwCurrent).style.opacity = '1';
+        document.getElementById('hw-dot-' + hwCurrent).style.background = 'white';
+        document.getElementById('hw-dot-' + hwCurrent).style.transform = 'scale(1.3)';
+        document.getElementById('hw-counter').textContent = (hwCurrent + 1) + ' / ' + HW_TOTAL;
+    }
+
+    function hwSlider(dir) { hwGoTo(hwCurrent + dir); }
+
+    // Auto-avance cada 5 s
+    setInterval(() => hwSlider(1), 5000);
+
+
+    // ─────────────────────────────────────────
+    // MAPBOX GL JS — Provincia de Llanquihue
+    // ─────────────────────────────────────────
+    const _t = ['pk.eyJ1IjoibWlndWVsZXN0ZWJhbi', 'IsImEiOiJjbW8xanQ4OTkwaXpjMnFwdW95bXNicXN3In0', '.aLc5i0mNIG2zQPQL9HxVWg'];
+    mapboxgl.accessToken = _t.join('');
+
+    const map = new mapboxgl.Map({
+        container: 'map-llanquihue',
+        style: 'mapbox://styles/mapbox/dark-v11',
+        center: [-72.97, -41.35],
+        zoom: 8.8,
+        attributionControl: false,
+        scrollZoom: false
+    });
+
+    map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'bottom-left');
+    map.addControl(new mapboxgl.AttributionControl({ compact: true }), 'bottom-right');
+
+    const municipiosGeo = {
+        type: 'FeatureCollection',
+        features: [
+            { type: 'Feature', geometry: { type: 'Point', coordinates: [-72.94, -41.47] }, properties: { name: 'Puerto Montt',  demand: 88, cases: 48, prioridad: 'alta'  } },
+            { type: 'Feature', geometry: { type: 'Point', coordinates: [-72.99, -41.31] }, properties: { name: 'Puerto Varas',  demand: 64, cases: 31, prioridad: 'media' } },
+            { type: 'Feature', geometry: { type: 'Point', coordinates: [-73.07, -41.13] }, properties: { name: 'Frutillar',     demand: 77, cases: 39, prioridad: 'alta'  } },
+            { type: 'Feature', geometry: { type: 'Point', coordinates: [-73.01, -41.24] }, properties: { name: 'Llanquihue',    demand: 45, cases: 18, prioridad: 'media' } },
+            { type: 'Feature', geometry: { type: 'Point', coordinates: [-72.87, -41.43] }, properties: { name: 'Los Muermos',   demand: 33, cases: 12, prioridad: 'baja'  } },
+            { type: 'Feature', geometry: { type: 'Point', coordinates: [-73.13, -41.77] }, properties: { name: 'Calbuco',       demand: 71, cases: 35, prioridad: 'alta'  } },
+            { type: 'Feature', geometry: { type: 'Point', coordinates: [-72.89, -40.93] }, properties: { name: 'Puerto Octay',  demand: 28, cases:  9, prioridad: 'baja'  } },
+            { type: 'Feature', geometry: { type: 'Point', coordinates: [-73.59, -41.62] }, properties: { name: 'Maullín',       demand: 38, cases: 14, prioridad: 'media' } },
+            { type: 'Feature', geometry: { type: 'Point', coordinates: [-72.99, -40.70] }, properties: { name: 'Fresia',        demand: 30, cases: 10, prioridad: 'baja'  } },
+        ]
+    };
+
+    map.on('load', () => {
+        map.addSource('municipios', { type: 'geojson', data: municipiosGeo });
+
+        // Capa heatmap
+        map.addLayer({
+            id: 'demand-heat',
+            type: 'heatmap',
+            source: 'municipios',
+            paint: {
+                'heatmap-weight':     ['interpolate', ['linear'], ['get', 'demand'], 0, 0, 100, 1],
+                'heatmap-intensity':  2.2,
+                'heatmap-radius':     75,
+                'heatmap-color': [
+                    'interpolate', ['linear'], ['heatmap-density'],
+                    0,   'rgba(0,0,0,0)',
+                    0.15,'rgba(148,126,176,0.35)',
+                    0.45,'rgba(234,179,8,0.65)',
+                    0.75,'rgba(239,100,60,0.82)',
+                    1,   'rgba(239,68,68,0.95)'
+                ],
+                'heatmap-opacity': 0.78
+            }
+        }, 'waterway-label');
+
+        // Capa círculos por municipio
+        map.addLayer({
+            id: 'municipio-circles',
+            type: 'circle',
+            source: 'municipios',
+            paint: {
+                'circle-radius': ['interpolate', ['linear'], ['get', 'demand'], 0, 8, 100, 24],
+                'circle-color': [
+                    'match', ['get', 'prioridad'],
+                    'alta',  '#ef4444',
+                    'media', '#eab308',
+                    '#a9d2d5'
+                ],
+                'circle-opacity': 0.85,
+                'circle-stroke-width':   2.5,
+                'circle-stroke-color':   '#ffffff',
+                'circle-stroke-opacity': 0.85
+            }
+        });
+
+        // Etiquetas de municipios
+        map.addLayer({
+            id: 'municipio-labels',
+            type: 'symbol',
+            source: 'municipios',
+            layout: {
+                'text-field':  ['get', 'name'],
+                'text-font':   ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+                'text-offset': [0, 2.0],
+                'text-size':   10,
+                'text-allow-overlap': false
+            },
+            paint: {
+                'text-color':       '#e2e8f0',
+                'text-halo-color':  '#1e2029',
+                'text-halo-width':  1.5
+            }
+        });
+
+        // Marker: Nodo Móvil #01 (en ruta a Puerto Varas)
+        const markerEl = document.createElement('div');
+        markerEl.innerHTML = `
+            <div style="display:flex;flex-direction:column;align-items:center;cursor:pointer;">
+                <div style="background:white;font-size:9px;font-weight:800;padding:2px 8px;border-radius:6px;margin-bottom:4px;color:#1e2029;white-space:nowrap;box-shadow:0 2px 10px rgba(0,0,0,0.35);">Nodo Móvil #01</div>
+                <div style="width:34px;height:34px;background:#a9d2d5;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px 4px rgba(169,210,213,0.6);">
+                    <i class="ph-bold ph-truck" style="color:#1e2029;font-size:15px;"></i>
+                </div>
+            </div>`;
+        new mapboxgl.Marker({ element: markerEl }).setLngLat([-72.99, -41.31]).addTo(map);
+
+        // Popup al hacer clic en municipio
+        const colorBg  = { alta: '#fee2e2', media: '#fef9c3', baja: '#cffafe' };
+        const colorTxt = { alta: '#b91c1c', media: '#a16207', baja: '#0e7490' };
+
+        map.on('click', 'municipio-circles', (e) => {
+            const p = e.features[0].properties;
+            new mapboxgl.Popup({ offset: 15, closeButton: true })
+                .setLngLat(e.features[0].geometry.coordinates)
+                .setHTML(`
+                    <div style="font-family:'Outfit',sans-serif;padding:2px 2px 4px;min-width:170px;">
+                        <div style="font-weight:800;font-size:15px;color:#1e2029;margin-bottom:6px;">${p.name}</div>
+                        <div style="font-size:11px;color:#766c7f;margin-bottom:3px;">Casos activos: <strong style="color:#947eb0;font-size:14px;">${p.cases}</strong></div>
+                        <div style="font-size:11px;color:#766c7f;margin-bottom:10px;">Índice demanda: <strong>${p.demand}%</strong></div>
+                        <span style="padding:3px 12px;border-radius:20px;font-size:10px;font-weight:700;background:${colorBg[p.prioridad]};color:${colorTxt[p.prioridad]};">
+                            Prioridad ${p.prioridad.toUpperCase()}
+                        </span>
+                    </div>`)
+                .addTo(map);
+        });
+
+        map.on('mouseenter', 'municipio-circles', () => { map.getCanvas().style.cursor = 'pointer'; });
+        map.on('mouseleave', 'municipio-circles', () => { map.getCanvas().style.cursor = ''; });
+    });
+
+
+    // ─────────────────────────────────────────
+    // SQL DATA EXPLORER
+    // ─────────────────────────────────────────
+    const pacientes = [
+        { id:  1, nombre: 'Sofía Ramírez',    edad:  7, diagnostico: 'TEA Nivel 2',              municipio: 'Puerto Montt',  fecha: '2026-03-12', estado: 'Activo',     prioridad: 'Alta'  },
+        { id:  2, nombre: 'Mateo González',   edad:  5, diagnostico: 'TDAH',                     municipio: 'Frutillar',     fecha: '2026-03-18', estado: 'En espera',  prioridad: 'Media' },
+        { id:  3, nombre: 'Valentina Rojas',  edad:  9, diagnostico: 'TEA Nivel 1',              municipio: 'Puerto Varas',  fecha: '2026-04-01', estado: 'Activo',     prioridad: 'Media' },
+        { id:  4, nombre: 'Tomás Herrera',    edad:  6, diagnostico: 'Desregulación Sensorial',  municipio: 'Calbuco',       fecha: '2026-02-28', estado: 'Completado', prioridad: 'Alta'  },
+        { id:  5, nombre: 'Isidora Mora',     edad:  8, diagnostico: 'TEA Nivel 2',              municipio: 'Llanquihue',    fecha: '2026-04-10', estado: 'Activo',     prioridad: 'Alta'  },
+        { id:  6, nombre: 'Emilio Castro',    edad: 10, diagnostico: 'TDAH',                     municipio: 'Puerto Montt',  fecha: '2026-04-15', estado: 'En espera',  prioridad: 'Baja'  },
+        { id:  7, nombre: 'Antonia Muñoz',    edad:  4, diagnostico: 'TEA Nivel 3',              municipio: 'Los Muermos',   fecha: '2026-01-20', estado: 'Activo',     prioridad: 'Alta'  },
+        { id:  8, nombre: 'Lucas Fernández',  edad:  7, diagnostico: 'Desregulación Sensorial',  municipio: 'Frutillar',     fecha: '2026-03-05', estado: 'En espera',  prioridad: 'Media' },
+        { id:  9, nombre: 'Renata Vidal',     edad:  6, diagnostico: 'TEA Nivel 1',              municipio: 'Puerto Octay',  fecha: '2026-04-20', estado: 'Activo',     prioridad: 'Baja'  },
+        { id: 10, nombre: 'Diego Soto',       edad:  8, diagnostico: 'TDAH',                     municipio: 'Calbuco',       fecha: '2026-02-14', estado: 'Completado', prioridad: 'Media' },
+        { id: 11, nombre: 'Catalina López',   edad:  5, diagnostico: 'TEA Nivel 2',              municipio: 'Puerto Varas',  fecha: '2026-04-18', estado: 'Activo',     prioridad: 'Alta'  },
+        { id: 12, nombre: 'Benjamín Torres',  edad:  9, diagnostico: 'Desregulación Sensorial',  municipio: 'Maullín',       fecha: '2026-03-30', estado: 'En espera',  prioridad: 'Media' },
+    ];
+
+    const queries = {
+        all:       { sql: 'SELECT * FROM pacientes ORDER BY id;',                                  fn: () => true                                    },
+        alta:      { sql: "SELECT * FROM pacientes WHERE prioridad = 'Alta' ORDER BY fecha DESC;", fn: p => p.prioridad === 'Alta'                   },
+        tea:       { sql: "SELECT * FROM pacientes WHERE diagnostico LIKE 'TEA%';",               fn: p => p.diagnostico.startsWith('TEA')          },
+        activo:    { sql: "SELECT * FROM pacientes WHERE estado = 'Activo' ORDER BY id;",         fn: p => p.estado === 'Activo'                    },
+        pto_montt: { sql: "SELECT * FROM pacientes WHERE municipio = 'Puerto Montt';",            fn: p => p.municipio === 'Puerto Montt'           },
+    };
+
+    const estadoStyle = {
+        'Activo':     'background:#dcfce7;color:#16a34a;',
+        'En espera':  'background:#fef9c3;color:#a16207;',
+        'Completado': 'background:#e0f2fe;color:#0369a1;',
+    };
+    const prioStyle = {
+        'Alta':  'background:#fee2e2;color:#b91c1c;',
+        'Media': 'background:#fef9c3;color:#a16207;',
+        'Baja':  'background:#f0fdf4;color:#166534;',
+    };
+
+    function runQuery(key) {
+        const q = queries[key];
+
+        // Actualizar botones activos
+        document.querySelectorAll('.sql-q-btn').forEach(b => { b.style.opacity = '0.45'; b.style.transform = 'scale(0.95)'; });
+        const btn = document.getElementById('q-' + key);
+        if (btn) { btn.style.opacity = '1'; btn.style.transform = 'scale(1)'; }
+
+        // Animación typewriter
+        const display = document.getElementById('sql-display');
+        let i = 0; display.textContent = '';
+        const typer = setInterval(() => {
+            display.textContent = q.sql.slice(0, ++i);
+            if (i >= q.sql.length) clearInterval(typer);
+        }, 20);
+
+        // Filtrar y renderizar
+        const rows = pacientes.filter(q.fn);
+        document.getElementById('sql-results').innerHTML = rows.map((p, idx) => `
+            <tr style="background:${idx % 2 === 0 ? '#ffffff' : '#f8f9fc'};" onmouseover="this.style.background='#f0edf6'" onmouseout="this.style.background='${idx % 2 === 0 ? '#ffffff' : '#f8f9fc'}'">
+                <td class="px-4 py-2.5 font-mono text-xs text-brand-dusty">${p.id}</td>
+                <td class="px-4 py-2.5 font-medium text-brand-dark text-sm">${p.nombre}</td>
+                <td class="px-4 py-2.5 text-brand-dusty text-sm">${p.edad} años</td>
+                <td class="px-4 py-2.5 text-brand-dusty text-xs">${p.diagnostico}</td>
+                <td class="px-4 py-2.5 text-brand-dusty text-xs">${p.municipio}</td>
+                <td class="px-4 py-2.5 font-mono text-xs text-brand-olive">${p.fecha}</td>
+                <td class="px-4 py-2.5">
+                    <span style="${estadoStyle[p.estado]}padding:2px 10px;border-radius:20px;font-size:10px;font-weight:700;">${p.estado}</span>
+                </td>
+                <td class="px-4 py-2.5">
+                    <span style="${prioStyle[p.prioridad]}padding:2px 10px;border-radius:20px;font-size:10px;font-weight:700;">${p.prioridad}</span>
+                </td>
+            </tr>`).join('');
+
+        document.getElementById('result-count').textContent = `(${rows.length} filas devueltas)`;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => runQuery('all'));
+    </script>
 </body>
 
 </html>
